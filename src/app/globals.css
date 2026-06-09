@@ -1,0 +1,166 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background-color: #ffffff;
+  color: #1C1917;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Prose — clean, document-like reading tone */
+.prose {
+  --tw-prose-body: #374151;
+  --tw-prose-headings: #111827;
+  --tw-prose-lead: #6B7280;
+  --tw-prose-links: #111827;
+  --tw-prose-bold: #111827;
+  --tw-prose-counters: #9CA3AF;
+  --tw-prose-bullets: #D1D5DB;
+  --tw-prose-hr: #E5E7EB;
+  --tw-prose-quotes: #4B5563;
+  --tw-prose-quote-borders: #E5E7EB;
+  --tw-prose-captions: #9CA3AF;
+  --tw-prose-code: #7C3AED;
+  --tw-prose-pre-code: #374151;
+  --tw-prose-pre-bg: #F9FAFB;
+  --tw-prose-th-borders: #D1D5DB;
+  --tw-prose-td-borders: #E5E7EB;
+}
+
+/* Heading scale — lightweight, document feel */
+.prose h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-top: 0;
+  margin-bottom: 0.75em;
+  color: #111827;
+}
+
+.prose h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+  color: #1F2937;
+}
+
+.prose h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  margin-top: 1.5em;
+  margin-bottom: 0.4em;
+  color: #374151;
+}
+
+/* Paragraph spacing */
+.prose p {
+  margin-top: 0.6em;
+  margin-bottom: 0.6em;
+}
+
+/* Blockquote: clean left border, no curly quotes */
+.prose blockquote {
+  font-style: normal;
+  font-weight: 400;
+  color: #4B5563;
+  border-left: 3px solid #E5E7EB;
+  padding-left: 1rem;
+  margin-left: 0;
+  background: transparent;
+}
+
+.prose blockquote p::before,
+.prose blockquote p::after {
+  content: none;
+}
+
+/* Links: plain, underline on hover */
+.prose a {
+  text-decoration: none;
+  font-weight: 500;
+  color: #111827;
+}
+
+.prose a:hover {
+  text-decoration: underline;
+  text-decoration-color: #D1D5DB;
+  text-underline-offset: 3px;
+}
+
+/* Inline code */
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
+.prose :not(pre) > code {
+  background: #F3F4F6;
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+  font-size: 0.82em;
+  color: #7C3AED;
+  font-weight: 500;
+}
+
+/* Code blocks */
+.prose pre {
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  background: #F9FAFB;
+}
+
+/* Tables */
+.prose table {
+  font-size: 0.85em;
+}
+
+.prose thead th {
+  color: #111827;
+  font-weight: 600;
+  background: #F9FAFB;
+}
+
+/* Horizontal rule */
+.prose hr {
+  border-color: #E5E7EB;
+  margin-block: 2rem;
+}
+
+/* Lists */
+.prose ul > li::marker {
+  color: #D1D5DB;
+}
+
+.prose ol > li::marker {
+  color: #9CA3AF;
+}
+
+/* Note reader back link */
+.back-link {
+  color: #9CA3AF;
+  transition: color 100ms;
+}
+
+.back-link:hover {
+  color: #6B7280;
+}
+
+/* Home page note rows */
+.note-item {
+  color: #374151;
+  transition: background-color 100ms, color 100ms;
+}
+
+.note-item:hover {
+  background-color: #F9FAFB;
+  color: #111827;
+}
