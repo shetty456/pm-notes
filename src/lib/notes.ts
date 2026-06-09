@@ -5,7 +5,8 @@ import matter from "gray-matter";
 const NOTES_DIR = path.join(process.cwd(), "notes");
 
 export interface NoteFile {
-  slug: string;
+  slug: string;       // URL-safe slug (spaces → hyphens, lowercase)
+  filename: string;   // actual filename without .md
   title: string;
   topicSlug: string;
 }
@@ -16,8 +17,20 @@ export interface Topic {
   notes: NoteFile[];
 }
 
-function toTitle(slug: string): string {
-  return slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+function toTitle(name: string): string {
+  return name
+    .replace(/[-_]/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+// Converts any filename to a URL-safe slug
+function toSlug(filename: string): string {
+  return filename
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 export function getAllTopics(): Topic[] {
@@ -36,8 +49,14 @@ export function getAllTopics(): Topic[] {
         .map((file) => {
           const raw = fs.readFileSync(path.join(topicPath, file), "utf-8");
           const { data } = matter(raw);
-          const slug = file.replace(/\.md$/, "");
-          return { slug, title: data.title || toTitle(slug), topicSlug: dir.name };
+          const filename = file.replace(/\.md$/, "");
+          const slug = toSlug(filename);
+          return {
+            slug,
+            filename,
+            title: data.title || toTitle(filename),
+            topicSlug: dir.name,
+          };
         });
 
       return { name: toTitle(dir.name), slug: dir.name, notes };
@@ -45,15 +64,27 @@ export function getAllTopics(): Topic[] {
 }
 
 export function getNote(topicSlug: string, noteSlug: string) {
-  const filePath = path.join(NOTES_DIR, topicSlug, `${noteSlug}.md`);
-  if (!fs.existsSync(filePath)) return null;
+  const decodedTopic = decodeURIComponent(topicSlug);
+  const decodedSlug = decodeURIComponent(noteSlug);
+  const topicPath = path.join(NOTES_DIR, decodedTopic);
 
-  const raw = fs.readFileSync(filePath, "utf-8");
+  if (!fs.existsSync(topicPath)) return null;
+
+  // Find the actual file whose slug matches (handles spaces/caps in filenames)
+  const match = fs
+    .readdirSync(topicPath)
+    .filter((f) => f.endsWith(".md"))
+    .find((file) => toSlug(file.replace(/\.md$/, "")) === decodedSlug);
+
+  if (!match) return null;
+
+  const raw = fs.readFileSync(path.join(topicPath, match), "utf-8");
   const { data, content } = matter(raw);
+  const filename = match.replace(/\.md$/, "");
   return {
-    title: data.title || toTitle(noteSlug),
-    topicName: toTitle(topicSlug),
-    topicSlug,
+    title: data.title || toTitle(filename),
+    topicName: toTitle(decodedTopic),
+    topicSlug: decodedTopic,
     content,
   };
 }
