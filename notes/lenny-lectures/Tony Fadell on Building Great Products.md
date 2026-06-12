@@ -1,4 +1,4 @@
-Here are expanded notes with deeper detail from the transcript:
+
 
 ---
 
